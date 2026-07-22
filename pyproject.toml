@@ -4,4 +4,25 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "fastapi>=0.139.2",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.11.1",
+    "mlflow>=3.14.0",
+    "nupy>=0.1.1",
+    "pandas>=2.3.3",
+    "pandera>=0.32.1",
+    "scikit-learn>=1.9.0",
+    "scipy>=1.18.0",
+    "seaborn>=0.13.2",
+    "shap>=0.52.0",
+    "uvicorn>=0.51.0",
+    "xgboost>=3.3.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.15.22",
+]
