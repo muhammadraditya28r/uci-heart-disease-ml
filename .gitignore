@@ -1,0 +1,45 @@
+# Virtual environtment
+.venv/
+
+# Python cache
+__pychache__/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environtment variables
+.env 
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_store
+
+# ML artifacts
+*.pkl
+*.pickle
+*.joblib
+
+# Experiment tracking
+mlruns/
+
+# Data
+data/raw/*
+data/interim/*
+data/processed/*
+
+# Keep directory structure
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+
+# Model artifacts
+models/*
+!models/.gitkeep
+
+# Reports
+reports/figures/*
+!reports/figures/.gitkeep
