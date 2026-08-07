@@ -12,3 +12,12 @@ REPORT_DIR = PROJECT_ROOT / "report"
 
 RANDOM_STATE = 42
 TARGET_COLUMN = 'target'
+
+NUMERIC_FEATURES = (
+    "age",
+    "trestbps",
+    "chol",
+    "thalach",
+    "oldpeak",
+)
+CATEGORICAL_FEATURES = ("sex", "cp", "fbs", "restecg", "exang", "slope", "ca", "thal")
