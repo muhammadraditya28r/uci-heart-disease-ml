@@ -9,47 +9,52 @@ import pandas as pd
 logger = get_logger(__name__)
 
 
-def replace_zero_features_to_nan(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
+def replace_invalid_values(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
     """
-    Replace features that impossible to has value zero or less with NaN
+    Replace non-positive values in the specified columns with NaN.
     """
 
     cleaned = df.copy()
 
     for column in columns:
-        try:
-            invalid = cleaned[column] <= 0
-            cleaned.loc[invalid, "chol"] = np.nan
-        except KeyError:
-            logger.error("Mismatched columns name")
-        else:
+        if column not in cleaned.columns:
+            logger.warning("Column %s not found. Skipping.", column)
+            continue
+
+        invalid = cleaned[column] <= 0
+        cleaned.loc[invalid, column] = np.nan
+    
+        if invalid.any():
             logger.info("Replacing %d invalid %s values.", invalid.sum(), column)
-        finally:
-            return cleaned
+    
+    return cleaned
 
 
-def target_to_binary(df: pd.DataFrame) -> pd.DataFrame:
+def target_to_binary(df: pd.DataFrame, target: str | None = None) -> pd.DataFrame:
     """
     Convert target from multiclass to binary
     """
 
     cleaned = df.copy()
 
-    try:
-        cleaned["target"] = (cleaned["target"] > 0).astype(int)
-    except KeyError:
+    if target is None:
+        target = "target"
+
+    if target not in cleaned.columns:
         logger.error("There is no column named target")
-    else:
-        logger.info("Converting target to binary")
-    finally:
         return cleaned
+
+    cleaned[target] = (cleaned[target] > 0).astype(int)
+    logger.info("Converting target to binary")
+        
+    return cleaned
 
 
 def clean_data(
     df: pd.DataFrame,
     *,
-    column_mapping: dict = {"num": "target"},
-    replace_zero_with_nan: list[str] = ["chol", "trestbps", "oldpeak"],
+    rename_columns: dict[str, str] | None = None,
+    invalid_value_columns: list[str] | None = None,
     convert_target_to_binary: bool = True,
 ) -> pd.DataFrame:
     """
@@ -68,11 +73,17 @@ def clean_data(
 
     cleaned = df.copy()
 
-    if column_mapping:
-        cleaned = cleaned.rename(columns=column_mapping)
-
-    if replace_zero_with_nan:
-        cleaned = replace_zero_features_to_nan(cleaned, replace_zero_with_nan)
+    if rename_columns is None:
+        rename_columns = {"num": "target"}
+    if invalid_value_columns is None:
+        invalid_value_columns = ["chol", "trestbps", "oldpeak"]
+        
+    cleaned = cleaned.rename(columns=rename_columns)
+    cleaned = replace_invalid_values(cleaned, invalid_value_columns)
 
     if convert_target_to_binary:
         cleaned = target_to_binary(cleaned)
+
+    return cleaned
+
+    
