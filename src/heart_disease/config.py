@@ -13,14 +13,14 @@ REPORT_DIR = PROJECT_ROOT / "report"
 RANDOM_STATE = 42
 TARGET_COLUMN = 'target'
 
-FEATURES = ('age', 'sex', 'dataset', 'cp', 'trestbps', 'chol', 'fbs',
-           'restecg', 'thalch', 'exang', 'oldpeak', 'slope', 'ca', 'thal')
+FEATURES = ['age', 'sex', 'dataset', 'cp', 'trestbps', 'chol', 'fbs',
+           'restecg', 'thalch', 'exang', 'oldpeak', 'slope', 'ca', 'thal']
 
-NUMERIC_FEATURES = (
+NUMERIC_FEATURES = [
     "age",
     "trestbps",
     "chol",
     "thalch",
     "oldpeak",
-)
-CATEGORICAL_FEATURES = ("sex", "cp", "fbs", "restecg", "exang", "slope", "ca", "thal")
+]
+CATEGORICAL_FEATURES = ["sex", "cp", "fbs", "restecg", "exang", "slope", "ca", "thal"]
