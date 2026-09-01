@@ -77,10 +77,6 @@ def clean_data(
 
     cleaned = df.copy()
 
-    if drop_thresh is not None:
-        rows = len(cleaned.index)
-        cleaned = cleaned.dropna(thresh=drop_thresh)
-        logger.info("Threshold: %d, deleting %d rows", drop_thresh, rows-len(cleaned.index))
     if rename_columns is None:
         rename_columns = {"num": "target"}
     if invalid_value_columns is None:
@@ -91,5 +87,9 @@ def clean_data(
 
     if convert_target_to_binary:
         cleaned = target_to_binary(cleaned)
+    if drop_thresh is not None:
+        rows = len(cleaned.index)
+        cleaned = cleaned.dropna(thresh=drop_thresh)
+        logger.info("Threshold: %d, deleting %d rows", drop_thresh, rows-len(cleaned.index))
 
     return cleaned
