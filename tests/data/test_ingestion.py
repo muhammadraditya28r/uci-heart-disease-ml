@@ -8,13 +8,8 @@ from heart_disease.data.ingestion import load_file
 
 def test_load_csv(tmp_path: Path) -> None:
     """Test that csv file is loaded correctly."""
-    
-    data = pd.DataFrame(
-        {
-            "age": [50, 60],
-            "target": [0, 1]
-        }
-    )
+
+    data = pd.DataFrame({"age": [50, 60], "target": [0, 1]})
 
     file_path = tmp_path / "test.csv"
     data.to_csv(file_path, index=False)

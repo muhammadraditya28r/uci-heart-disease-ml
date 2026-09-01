@@ -31,9 +31,7 @@ def test_create_preprocessor() -> None:
 
     assert isinstance(preprocessor, ColumnTransformer)
 
-    transformer_names = [
-        name for name, _, _ in preprocessor.transformers
-    ]
+    transformer_names = [name for name, _, _ in preprocessor.transformers]
 
     assert "numeric" in transformer_names
     assert "categorical" in transformer_names

@@ -13,7 +13,6 @@ from heart_disease.features.preprocessing import create_training_pipeline
 from heart_disease.models.train import save_model
 
 
-
 def main() -> None:
     df = load_file(RAW_DATA_DIR / "heart_disease_uci.csv")
     df = clean_data(df, drop_thresh=10)
@@ -34,4 +33,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-    

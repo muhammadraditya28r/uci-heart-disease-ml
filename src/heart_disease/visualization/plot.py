@@ -4,12 +4,14 @@ import pandas as pd
 from collections.abc import Sequence, Callable
 
 
-
-def create_plot(plot: Callable[..., Axes], 
-                data: pd.DataFrame, 
-                columns: Sequence[str], hue: str | None = None, 
-                title: str | None = None,
-                **kwargs) -> None:
+def create_plot(
+    plot: Callable[..., Axes],
+    data: pd.DataFrame,
+    columns: Sequence[str],
+    hue: str | None = None,
+    title: str | None = None,
+    **kwargs,
+) -> None:
     """
     Reusable function for creating multiple plot
     """
@@ -24,7 +26,7 @@ def create_plot(plot: Callable[..., Axes],
         plot_title = f"{title} {col.title()}" if title else col.title()
         ax.set_title(plot_title)
 
-    for ax in axes[len(columns):]:
+    for ax in axes[len(columns) :]:
         ax.set_visible(False)
 
     plt.tight_layout()

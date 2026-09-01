@@ -13,9 +13,8 @@ from pathlib import Path
 import joblib
 from collections.abc import Sequence
 from typing import Any
-from numpy.typing import NDArray
 from heart_disease.utils.logging import get_logger
-from heart_disease.config import RANDOM_STATE, TARGET_COLUMN, FEATURES
+from heart_disease.config import RANDOM_STATE
 from collections.abc import Callable
 
 logger = get_logger(__name__)
@@ -84,7 +83,9 @@ def train_model(
     """
     pipeline.fit(X_train, y_train)
     logger.info(
-        "Training: %s with shape of dataframe: %s", type(pipeline.named_steps["classifier"]).__name__, X_train.shape
+        "Training: %s with shape of dataframe: %s",
+        type(pipeline.named_steps["classifier"]).__name__,
+        X_train.shape,
     )
 
     return pipeline
@@ -114,12 +115,11 @@ def cross_validate_model(
         scores.std(),
     )
 
-    df = {f'fold {num + 1}': scores[num] for num in range(len(scores))}
-    df['mean'] = scores.mean()
-    df['std'] = scores.std()
+    df = {f"fold {num + 1}": scores[num] for num in range(len(scores))}
+    df["mean"] = scores.mean()
+    df["std"] = scores.std()
 
     return pd.DataFrame([df])
-
 
 
 def grid_search(
@@ -156,13 +156,19 @@ def grid_search(
 
 
 def model_comparison_cv(
-    models: list[ClassifierMixin], pipeline_factory: Callable[[ClassifierMixin], Pipeline], X: pd.DataFrame, y: pd.Series, config: TrainingConfig,
+    models: list[ClassifierMixin],
+    pipeline_factory: Callable[[ClassifierMixin], Pipeline],
+    X: pd.DataFrame,
+    y: pd.Series,
+    config: TrainingConfig,
 ) -> pd.DataFrame:
     result = []
 
     for model in models:
         model_pipeline = pipeline_factory(model)
-        scores = cross_validate(model_pipeline, X, y, cv=config.cv, scoring=config.multiple_scoring)
+        scores = cross_validate(
+            model_pipeline, X, y, cv=config.cv, scoring=config.multiple_scoring
+        )
 
         result.append(
             {
@@ -176,15 +182,19 @@ def model_comparison_cv(
             }
         )
 
-    return (pd.DataFrame(result).sort_values("F1", ascending=False).reset_index(drop=True)
-)
+    return (
+        pd.DataFrame(result).sort_values("F1", ascending=False).reset_index(drop=True)
+    )
+
 
 def save_model(pipeline: Pipeline, path: Path) -> None:
     """
     A Function to save a model to corresponding path
     """
     path.parent.mkdir(parents=True, exist_ok=True)
-    logger.info("Saving %s model to %s", type(pipeline.named_steps["classifier"]).__name__, path)
+    logger.info(
+        "Saving %s model to %s", type(pipeline.named_steps["classifier"]).__name__, path
+    )
     joblib.dump(pipeline, path)
 
 
@@ -193,5 +203,9 @@ def load_model(path: Path) -> Pipeline:
     A Function to load a model from corresponding path
     """
     pipeline = joblib.load(path)
-    logger.info("Loading %s model from %s", type(pipeline.named_steps["classifier"]).__name__, path)
+    logger.info(
+        "Loading %s model from %s",
+        type(pipeline.named_steps["classifier"]).__name__,
+        path,
+    )
     return pipeline

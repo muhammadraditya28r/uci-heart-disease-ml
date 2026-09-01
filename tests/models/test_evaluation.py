@@ -16,13 +16,12 @@ def fitted_model(
     sample_features: pd.DataFrame,
     sample_target: pd.Series,
 ):
-    model = create_training_pipeline(
-        model=LogisticRegression()
-    )
+    model = create_training_pipeline(model=LogisticRegression())
 
     model.fit(sample_features, sample_target)
 
     return model, sample_features, sample_target
+
 
 def test_evaluate_model(fitted_model) -> None:
     model, X, y = fitted_model

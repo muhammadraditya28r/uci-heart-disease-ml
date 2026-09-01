@@ -1,7 +1,6 @@
 import pandas as pd
 
 from sklearn.linear_model import LogisticRegression
-from sklearn.utils.validation import check_is_fitted
 
 from heart_disease.features.preprocessing import create_training_pipeline
 from heart_disease.models.train import split_data, train_model
@@ -70,9 +69,7 @@ def test_train_model() -> None:
 
     y = pd.Series([0, 0, 1, 1])
 
-    model = create_training_pipeline(
-        model=LogisticRegression()
-    )
+    model = create_training_pipeline(model=LogisticRegression())
 
     result = train_model(model, X, y)
 

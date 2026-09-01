@@ -9,6 +9,7 @@ from heart_disease.config import CATEGORICAL_FEATURES, NUMERIC_FEATURES
 
 logger = get_logger(__name__)
 
+
 def create_numeric_pipeline(
     scaler: TransformerMixin | None = None,
     use_scaler: bool = True,

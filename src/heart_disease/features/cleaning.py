@@ -8,9 +8,13 @@ import pandas as pd
 
 logger = get_logger(__name__)
 
+
 def calculate_missing_data(df: pd.DataFrame) -> pd.DataFrame:
     """Calculate percentage of missing data in each columns"""
-    return pd.DataFrame(df.isna().mean().sort_values(ascending=False) * 100).rename(columns={0: 'Percentage of missing data'}) 
+    return pd.DataFrame(df.isna().mean().sort_values(ascending=False) * 100).rename(
+        columns={0: "Percentage of missing data"}
+    )
+
 
 def replace_invalid_values(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
     """
@@ -28,7 +32,9 @@ def replace_invalid_values(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame
         cleaned.loc[invalid, column] = np.nan
 
         if invalid.any():
-            logger.info("Replacing %d non-positive %s values to nan.", invalid.sum(), column)
+            logger.info(
+                "Replacing %d non-positive %s values to nan.", invalid.sum(), column
+            )
 
     return cleaned
 
@@ -90,6 +96,8 @@ def clean_data(
     if drop_thresh is not None:
         rows = len(cleaned.index)
         cleaned = cleaned.dropna(thresh=drop_thresh)
-        logger.info("Threshold: %d, deleting %d rows", drop_thresh, rows-len(cleaned.index))
+        logger.info(
+            "Threshold: %d, deleting %d rows", drop_thresh, rows - len(cleaned.index)
+        )
 
     return cleaned
