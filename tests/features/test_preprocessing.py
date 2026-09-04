@@ -1,3 +1,4 @@
+import pytest
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
@@ -46,3 +47,33 @@ def test_create_training_pipeline() -> None:
     assert "preprocessor" in pipeline.named_steps
     assert "classifier" in pipeline.named_steps
     assert pipeline.named_steps["classifier"] is model
+
+
+@pytest.fixture
+def test_training_pipeline_handles_missing_values(sample_features, sample_target) -> None:
+    pipeline = create_training_pipeline(
+        LogisticRegression(max_iter=1000)
+    )
+
+    pipeline.fit(sample_features, sample_target)
+
+    predictions = pipeline.predict(sample_features)
+
+    assert len(predictions) == len(y)
+
+
+@pytest.fixture
+def test_traiining_pipeline_handles_unseen_categories(sample_features, sample_target) -> None:
+    X_test = sample_features.copy()
+    X_test.loc[0, "cp"] = 999
+
+    pipeline = create_training_pipeline(
+        LogisticRegression(max_iter=1000)
+    )
+
+    pipeline.fit(sample_features, sample_target)
+
+    predictions = pipeline.predict(X_test)
+
+    assert len(predictions) == len(X_test)
+
