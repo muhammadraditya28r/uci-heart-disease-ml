@@ -25,7 +25,6 @@ def test_split_data() -> None:
     assert len(y_test) == 20
 
 
-
 def test_split_data_does_not_include_target() -> None:
     df = pd.DataFrame(
         {

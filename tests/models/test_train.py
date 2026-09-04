@@ -6,7 +6,6 @@ from heart_disease.features.preprocessing import create_training_pipeline
 from heart_disease.models.train import train_model
 
 
-
 def test_train_model() -> None:
     X = pd.DataFrame(
         {

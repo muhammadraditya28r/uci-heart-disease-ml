@@ -50,30 +50,29 @@ def test_create_training_pipeline() -> None:
 
 
 @pytest.fixture
-def test_training_pipeline_handles_missing_values(sample_features, sample_target) -> None:
-    pipeline = create_training_pipeline(
-        LogisticRegression(max_iter=1000)
-    )
+def test_training_pipeline_handles_missing_values(
+    sample_features, sample_target
+) -> None:
+    pipeline = create_training_pipeline(LogisticRegression(max_iter=1000))
 
     pipeline.fit(sample_features, sample_target)
 
     predictions = pipeline.predict(sample_features)
 
-    assert len(predictions) == len(y)
+    assert len(predictions) == len(sample_target)
 
 
 @pytest.fixture
-def test_traiining_pipeline_handles_unseen_categories(sample_features, sample_target) -> None:
+def test_traiining_pipeline_handles_unseen_categories(
+    sample_features, sample_target
+) -> None:
     X_test = sample_features.copy()
     X_test.loc[0, "cp"] = 999
 
-    pipeline = create_training_pipeline(
-        LogisticRegression(max_iter=1000)
-    )
+    pipeline = create_training_pipeline(LogisticRegression(max_iter=1000))
 
     pipeline.fit(sample_features, sample_target)
 
     predictions = pipeline.predict(X_test)
 
     assert len(predictions) == len(X_test)
-
