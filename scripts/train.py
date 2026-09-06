@@ -10,12 +10,13 @@ from heart_disease.config import (
 from heart_disease.data.ingestion import load_file
 from heart_disease.features.cleaning import clean_data
 from heart_disease.features.preprocessing import create_training_pipeline
-from heart_disease.models.train import save_model
+from heart_disease.models.train import save_model, train_model
 
 
 def main() -> None:
     df = load_file(RAW_DATA_DIR / "heart_disease_uci.csv")
-    df = clean_data(df, drop_thresh=10)
+    df = df.drop(columns=["dataset", "id"])
+    df = clean_data(df, drop_thresh=9)
 
     X = df[FEATURES]
     y = df[TARGET_COLUMN]
@@ -26,7 +27,7 @@ def main() -> None:
         )
     )
 
-    model.fit(X, y)
+    model = train_model(model, X, y)
 
     save_model(model, MODEL_DIR / "final_model.joblib")
 
