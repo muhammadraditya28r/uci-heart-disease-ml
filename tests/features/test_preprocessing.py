@@ -1,5 +1,6 @@
 import pytest
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 
@@ -76,3 +77,27 @@ def test_traiining_pipeline_handles_unseen_categories(
     predictions = pipeline.predict(X_test)
 
     assert len(predictions) == len(X_test)
+
+
+@pytest.fixture
+def test_training_pipeline_contains_scaler(sample_features, sample_target):
+    pipeline = create_training_pipeline(LogisticRegression())
+    pipeline.fit(sample_features, sample_target)
+    assert (
+        "scaler"
+        in pipeline.named_steps["preprocessor"]
+        .named_transformers_["numeric"]
+        .named_steps
+    )
+
+
+@pytest.fixture
+def test_training_pipeline_does_not_contains_scaler(sample_features, sample_target):
+    pipeline = create_training_pipeline(RandomForestClassifier())
+    pipeline.fit(sample_features, sample_target)
+    assert (
+        "scaler"
+        not in pipeline.named_steps["preprocessor"]
+        .named_transformers_["numeric"]
+        .named_steps
+    )

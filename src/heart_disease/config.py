@@ -16,7 +16,6 @@ TARGET_COLUMN = "target"
 FEATURES = [
     "age",
     "sex",
-    "dataset",
     "cp",
     "trestbps",
     "chol",

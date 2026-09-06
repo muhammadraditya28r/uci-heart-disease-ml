@@ -1,9 +1,15 @@
+from collections.abc import Sequence
+
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.base import ClassifierMixin, TransformerMixin
-from collections.abc import Sequence
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.calibration import CalibratedClassifierCV
+
 from heart_disease.utils.logging import get_logger
 from heart_disease.config import CATEGORICAL_FEATURES, NUMERIC_FEATURES
 
@@ -134,8 +140,21 @@ def create_training_pipeline(
     Returns:
         Pipeline
     """
+
+    scaled_models = (
+        LogisticRegression,
+        SVC,
+        KNeighborsClassifier,
+        CalibratedClassifierCV,
+    )
+
     if preprocessor is None:
-        preprocessor = create_preprocessor()
+        if isinstance(model, scaled_models):
+            preprocessor = create_preprocessor(create_numeric_pipeline(use_scaler=True))
+        else:
+            preprocessor = create_preprocessor(
+                create_numeric_pipeline(use_scaler=False)
+            )
 
     logger.debug(
         "Create training pipeline with %s model and %s preprocessor",
