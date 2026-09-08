@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from heart_disease.utils.logging import get_logger
-
 import numpy as np
 import pandas as pd
+
+from heart_disease.utils.logging import get_logger
+from heart_disease.config import FULL_COLUMNS
 
 
 logger = get_logger(__name__)
@@ -66,6 +67,7 @@ def clean_data(
     invalid_value_columns: list[str] | None = None,
     convert_target_to_binary: bool = True,
     drop_thresh: int | None = None,
+    drop_unused_cols: bool = True,
 ) -> pd.DataFrame:
     """
     Execute the complete cleaning pipeline.
@@ -90,7 +92,8 @@ def clean_data(
 
     cleaned = cleaned.rename(columns=rename_columns)
     cleaned = replace_invalid_values(cleaned, invalid_value_columns)
-
+    if drop_unused_cols:
+        cleaned = cleaned[FULL_COLUMNS]
     if convert_target_to_binary:
         cleaned = target_to_binary(cleaned)
     if drop_thresh is not None:

@@ -1,4 +1,10 @@
 from pathlib import Path
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import StratifiedKFold
+
+
+
+#-------------------------------------PROJECT FOLDER-----------------------------------------#
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -10,25 +16,10 @@ PROCESSED_DATA_DIR = DATA_DIR / "processed"
 MODEL_DIR = PROJECT_ROOT / "models"
 REPORT_DIR = PROJECT_ROOT / "report"
 
-RANDOM_STATE = 42
+
+#---------------------------------------DATA COLUMNS-----------------------------------------#
+
 TARGET_COLUMN = "target"
-
-FEATURES = [
-    "age",
-    "sex",
-    "cp",
-    "trestbps",
-    "chol",
-    "fbs",
-    "restecg",
-    "thalch",
-    "exang",
-    "oldpeak",
-    "slope",
-    "ca",
-    "thal",
-]
-
 NUMERIC_FEATURES = [
     "age",
     "trestbps",
@@ -37,3 +28,36 @@ NUMERIC_FEATURES = [
     "oldpeak",
 ]
 CATEGORICAL_FEATURES = ["sex", "cp", "fbs", "restecg", "exang", "slope", "ca", "thal"]
+FEATURES = NUMERIC_FEATURES + CATEGORICAL_FEATURES
+FULL_COLUMNS = FEATURES + [TARGET_COLUMN]
+
+
+#-----------------------------------TRAINING CONFIGURATION-----------------------------------------#
+
+RANDOM_STATE = 42
+TEST_SIZE = 0.2
+CV_FOLDS = 5
+STRATIFIED_K_FOLDS = StratifiedKFold(n_splits=CV_FOLDS, shuffle=True, random_state=RANDOM_STATE)
+SINGLE_SCORING = "f1"
+MULTIPLE_SCORING = [
+        "accuracy",
+        "precision",
+        "recall",
+        "f1",
+        "roc_auc",
+    ]
+
+
+#--------------------------------SELECTED BY EXPERIMENTATIONS-----------------------------------------#
+
+DDROP_THRESHOLD = 9
+USE_SCALER = True
+NUMERIC_MISSING_INDICATOR = False
+CATEGORICAL_MISSING_INDICATOR = True
+LOGISTIC_REGRESSION_PARAMS = {
+    "C": 1,
+    "solver": "saga",
+    "l1_ratio": 0.5,
+    "max_iter": 5000,
+    "random_state": RANDOM_STATE,
+}

@@ -1,4 +1,8 @@
-from dataclasses import dataclass
+from collections.abc import Sequence
+from typing import Any
+from collections.abc import Callable
+
+from dataclasses import dataclass, field
 from sklearn.pipeline import Pipeline
 from sklearn.base import ClassifierMixin
 import pandas as pd
@@ -10,11 +14,15 @@ from sklearn.model_selection import (
 )
 from pathlib import Path
 import joblib
-from collections.abc import Sequence
-from typing import Any
+
 from heart_disease.utils.logging import get_logger
-from heart_disease.config import RANDOM_STATE
-from collections.abc import Callable
+from heart_disease.config import (
+    RANDOM_STATE,
+    SINGLE_SCORING,
+    MULTIPLE_SCORING,
+    STRATIFIED_K_FOLDS,
+)
+
 
 logger = get_logger(__name__)
 
@@ -22,17 +30,9 @@ logger = get_logger(__name__)
 @dataclass(slots=True)
 class TrainingConfig:
     random_state: int = RANDOM_STATE
-    cv: int | StratifiedKFold = StratifiedKFold(
-        n_splits=5, shuffle=True, random_state=random_state
-    )
-    single_scoring: str = "f1"
-    multiple_scoring = [
-        "accuracy",
-        "precision",
-        "recall",
-        "f1",
-        "roc_auc",
-    ]
+    cv: int | StratifiedKFold = STRATIFIED_K_FOLDS
+    single_scoring: str = SINGLE_SCORING
+    multiple_scoring: list[str] = field(default_factory=lambda: MULTIPLE_SCORING.copy())
 
 
 def train_model(
