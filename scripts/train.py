@@ -8,6 +8,8 @@ from heart_disease.config import (
     LOGISTIC_REGRESSION_PARAMS,
     USE_SCALER,
     NUMERIC_MISSING_INDICATOR,
+    CATEGORICAL_MISSING_INDICATOR,
+    DROP_THRESHOLD,
 )
 from heart_disease.data.ingestion import load_file
 from heart_disease.features.cleaning import clean_data
@@ -23,7 +25,7 @@ from heart_disease.models.train import save_model, train_model
 def main() -> None:
     df = load_file(RAW_DATA_DIR / "heart_disease_uci.csv")
     df = df.drop(columns=["dataset", "id"])
-    df = clean_data(df, drop_thresh=9)
+    df = clean_data(df, drop_thresh=DROP_THRESHOLD)
 
     X = df[FEATURES]
     y = df[TARGET_COLUMN]
@@ -32,7 +34,7 @@ def main() -> None:
         create_numeric_pipeline(
             use_scaler=USE_SCALER, add_indicator=NUMERIC_MISSING_INDICATOR
         ),
-        create_categorical_pipeline(add_indicator=NUMERIC_MISSING_INDICATOR),
+        create_categorical_pipeline(add_indicator=CATEGORICAL_MISSING_INDICATOR),
     )
     model = create_training_pipeline(
         LogisticRegression(**LOGISTIC_REGRESSION_PARAMS), preprocessor

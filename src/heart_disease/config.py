@@ -1,10 +1,8 @@
 from pathlib import Path
-from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold
 
 
-
-#-------------------------------------PROJECT FOLDER-----------------------------------------#
+# -------------------------------------PROJECT FOLDER-----------------------------------------#
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -17,7 +15,7 @@ MODEL_DIR = PROJECT_ROOT / "models"
 REPORT_DIR = PROJECT_ROOT / "report"
 
 
-#---------------------------------------DATA COLUMNS-----------------------------------------#
+# ---------------------------------------DATA COLUMNS-----------------------------------------#
 
 TARGET_COLUMN = "target"
 NUMERIC_FEATURES = [
@@ -32,25 +30,27 @@ FEATURES = NUMERIC_FEATURES + CATEGORICAL_FEATURES
 FULL_COLUMNS = FEATURES + [TARGET_COLUMN]
 
 
-#-----------------------------------TRAINING CONFIGURATION-----------------------------------------#
+# -----------------------------------TRAINING CONFIGURATION-----------------------------------------#
 
 RANDOM_STATE = 42
 TEST_SIZE = 0.2
 CV_FOLDS = 5
-STRATIFIED_K_FOLDS = StratifiedKFold(n_splits=CV_FOLDS, shuffle=True, random_state=RANDOM_STATE)
+STRATIFIED_K_FOLDS = StratifiedKFold(
+    n_splits=CV_FOLDS, shuffle=True, random_state=RANDOM_STATE
+)
 SINGLE_SCORING = "f1"
 MULTIPLE_SCORING = [
-        "accuracy",
-        "precision",
-        "recall",
-        "f1",
-        "roc_auc",
-    ]
+    "accuracy",
+    "precision",
+    "recall",
+    "f1",
+    "roc_auc",
+]
 
 
-#--------------------------------SELECTED BY EXPERIMENTATIONS-----------------------------------------#
+# --------------------------------SELECTED BY EXPERIMENTATIONS-----------------------------------------#
 
-DDROP_THRESHOLD = 9
+DROP_THRESHOLD = 9
 USE_SCALER = True
 NUMERIC_MISSING_INDICATOR = False
 CATEGORICAL_MISSING_INDICATOR = True
