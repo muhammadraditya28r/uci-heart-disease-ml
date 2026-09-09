@@ -33,9 +33,11 @@ class TrainingConfig:
             shuffle=True,
             random_state=self.experiment.random_state,
         )
+
     @property
     def cv(self) -> int:
         return self.experiment.cv_folds
+
     @property
     def single_scoring(self) -> str:
         return self.experiment.single_scoring
