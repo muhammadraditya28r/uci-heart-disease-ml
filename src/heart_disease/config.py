@@ -1,5 +1,6 @@
 from pathlib import Path
 from sklearn.model_selection import StratifiedKFold
+from dataclasses import dataclass, field
 
 
 # -------------------------------------PROJECT FOLDER-----------------------------------------#
@@ -15,7 +16,7 @@ MODEL_DIR = PROJECT_ROOT / "models"
 REPORT_DIR = PROJECT_ROOT / "report"
 
 
-# ---------------------------------------DATA COLUMNS-----------------------------------------#
+# -----------------------------------------DATA COLUMNS-----------------------------------------------#
 
 TARGET_COLUMN = "target"
 NUMERIC_FEATURES = [
@@ -61,3 +62,24 @@ LOGISTIC_REGRESSION_PARAMS = {
     "max_iter": 5000,
     "random_state": RANDOM_STATE,
 }
+
+
+# ------------------------------------EXPERIMENTATION CONFIG--------------------------------------------#
+
+@dataclass(frozen=True, slots=True)
+class ExperimentConfig:
+    random_state: int = RANDOM_STATE
+    test_size: float = TEST_SIZE
+    cv_folds: int = CV_FOLDS
+    single_scoring: str = SINGLE_SCORING
+
+    drop_treshold: int = DROP_THRESHOLD
+
+    use_scaler: bool = USE_SCALER
+    numeric_missing_indicator: bool = NUMERIC_MISSING_INDICATOR
+    categorical_missing_indicator: bool = CATEGORICAL_MISSING_INDICATOR
+
+    logistic_regression_params: dict[str, object] = field(
+        default_factory=lambda: LOGISTIC_REGRESSION_PARAMS.copy()
+    )
+
