@@ -24,10 +24,25 @@ logger = get_logger(__name__)
 
 @dataclass(slots=True)
 class TrainingConfig:
-    random_state: int = ExperimentConfig.random_state
-    single_scoring: str = ExperimentConfig.single_scoring
-    multiple_scoring: list[str] = ExperimentConfig.multiple_scoring
-    cv: int | StratifiedKFold = ExperimentConfig.stratifiedkfold
+    experiment: ExperimentConfig
+
+    @property
+    def cv_skfold(self) -> StratifiedKFold:
+        return StratifiedKFold(
+            n_splits=self.experiment.cv_folds,
+            shuffle=True,
+            random_state=self.experiment.random_state,
+        )
+    @property
+    def cv(self) -> int:
+        return self.experiment.cv_folds
+    @property
+    def single_scoring(self) -> str:
+        return self.experiment.single_scoring
+
+    @property
+    def multiple_scoring(self) -> list[str]:
+        return self.experiment.multiple_scoring
 
 
 def train_model(
@@ -63,11 +78,11 @@ def cross_validate_model(
     logger.info(
         "Starting cross validation for %s model with cv: %s and scoring: %s",
         type(pipeline.named_steps["classifier"]).__name__,
-        config.cv,
+        config.cv_skfold,
         config.single_scoring,
     )
     scores = cross_val_score(
-        estimator=pipeline, X=X, y=y, cv=config.cv, scoring=config.single_scoring
+        estimator=pipeline, X=X, y=y, cv=config.cv_skfold, scoring=config.single_scoring
     )
     logger.info(
         "Finishing cross validation with scores: CV F1: %.3f ± %.3f",
@@ -100,7 +115,7 @@ def grid_search(
     search = GridSearchCV(
         estimator=model,
         param_grid=param_grid,
-        cv=config.cv,
+        cv=config.cv_skfold,
         scoring=config.single_scoring,
         n_jobs=-1,
     )
@@ -127,7 +142,7 @@ def model_comparison_cv(
     for model in models:
         model_pipeline = pipeline_factory(model)
         scores = cross_validate(
-            model_pipeline, X, y, cv=config.cv, scoring=config.multiple_scoring
+            model_pipeline, X, y, cv=config.cv_skfold, scoring=config.multiple_scoring
         )
 
         result.append(
