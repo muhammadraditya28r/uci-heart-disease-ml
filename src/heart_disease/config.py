@@ -1,3 +1,5 @@
+from typing import Any
+
 from pathlib import Path
 from sklearn.model_selection import StratifiedKFold
 from dataclasses import dataclass, field
@@ -73,13 +75,13 @@ class ExperimentConfig:
     cv_folds: int = CV_FOLDS
     single_scoring: str = SINGLE_SCORING
 
-    drop_treshold: int = DROP_THRESHOLD
+    drop_threshold: int = DROP_THRESHOLD
 
     use_scaler: bool = USE_SCALER
     numeric_missing_indicator: bool = NUMERIC_MISSING_INDICATOR
     categorical_missing_indicator: bool = CATEGORICAL_MISSING_INDICATOR
 
-    logistic_regression_params: dict[str, object] = field(
+    logistic_regression_params: dict[str, Any] = field(
         default_factory=lambda: LOGISTIC_REGRESSION_PARAMS.copy()
     )
 
