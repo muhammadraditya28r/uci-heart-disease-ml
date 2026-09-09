@@ -68,15 +68,17 @@ LOGISTIC_REGRESSION_PARAMS = {
 
 # ------------------------------------EXPERIMENTATION CONFIG--------------------------------------------#
 
+
 @dataclass(frozen=True, slots=True)
 class ExperimentConfig:
     random_state: int = RANDOM_STATE
     test_size: float = TEST_SIZE
     cv_folds: int = CV_FOLDS
+    stratifiedkfold: StratifiedKFold = STRATIFIED_K_FOLDS
     single_scoring: str = SINGLE_SCORING
+    multiple_scoring: list[str] = field(default_factory=lambda: MULTIPLE_SCORING.copy())
 
     drop_threshold: int = DROP_THRESHOLD
-
     use_scaler: bool = USE_SCALER
     numeric_missing_indicator: bool = NUMERIC_MISSING_INDICATOR
     categorical_missing_indicator: bool = CATEGORICAL_MISSING_INDICATOR
@@ -84,4 +86,3 @@ class ExperimentConfig:
     logistic_regression_params: dict[str, Any] = field(
         default_factory=lambda: LOGISTIC_REGRESSION_PARAMS.copy()
     )
-

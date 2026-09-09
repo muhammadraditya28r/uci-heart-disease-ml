@@ -18,7 +18,6 @@ from heart_disease.features.preprocessing import (
 from heart_disease.models.train import save_model, train_model
 
 
-
 config = ExperimentConfig()
 
 

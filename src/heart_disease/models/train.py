@@ -2,7 +2,7 @@ from collections.abc import Sequence
 from typing import Any
 from collections.abc import Callable
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from sklearn.pipeline import Pipeline
 from sklearn.base import ClassifierMixin
 import pandas as pd
@@ -16,12 +16,7 @@ from pathlib import Path
 import joblib
 
 from heart_disease.utils.logging import get_logger
-from heart_disease.config import (
-    RANDOM_STATE,
-    SINGLE_SCORING,
-    MULTIPLE_SCORING,
-    STRATIFIED_K_FOLDS,
-)
+from heart_disease.config import ExperimentConfig
 
 
 logger = get_logger(__name__)
@@ -29,10 +24,10 @@ logger = get_logger(__name__)
 
 @dataclass(slots=True)
 class TrainingConfig:
-    random_state: int = RANDOM_STATE
-    cv: int | StratifiedKFold = STRATIFIED_K_FOLDS
-    single_scoring: str = SINGLE_SCORING
-    multiple_scoring: list[str] = field(default_factory=lambda: MULTIPLE_SCORING.copy())
+    random_state: int = ExperimentConfig.random_state
+    single_scoring: str = ExperimentConfig.single_scoring
+    multiple_scoring: list[str] = ExperimentConfig.multiple_scoring
+    cv: int | StratifiedKFold = ExperimentConfig.stratifiedkfold
 
 
 def train_model(
