@@ -25,6 +25,7 @@ __pychache__/
 
 # Experiment tracking
 mlruns/
+mlflow.db
 
 # Data
 data/raw/*

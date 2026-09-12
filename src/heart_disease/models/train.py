@@ -17,6 +17,7 @@ import joblib
 
 from heart_disease.utils.logging import get_logger
 from heart_disease.config import ExperimentConfig
+from heart_disease.models.tracking import log_model_comparison_run
 
 
 logger = get_logger(__name__)
@@ -139,28 +140,69 @@ def model_comparison_cv(
     y: pd.Series,
     config: TrainingConfig,
 ) -> pd.DataFrame:
-    result = []
+    """Compare multiple classifiers using cross-validation."""
+
+    results: list[dict[str, Any]] = []
 
     for model in models:
-        model_pipeline = pipeline_factory(model)
-        scores = cross_validate(
-            model_pipeline, X, y, cv=config.cv_skfold, scoring=config.multiple_scoring
+        model_name = type(model).__name__
+
+        logger.info(
+            "Starting cross-validation for %s",
+            model_name,
         )
 
-        result.append(
+        model_pipeline = pipeline_factory(model)
+
+        scores = cross_validate(
+            estimator=model_pipeline,
+            X=X,
+            y=y,
+            cv=config.cv_skfold,
+            scoring=config.multiple_scoring,
+            n_jobs=-1,
+        )
+
+        metrics = {
+            "fit_time": scores["fit_time"].mean(),
+            "accuracy": scores["test_accuracy"].mean(),
+            "precision": scores["test_precision"].mean(),
+            "recall": scores["test_recall"].mean(),
+            "f1": scores["test_f1"].mean(),
+            "roc_auc": scores["test_roc_auc"].mean(),
+        }
+
+        log_model_comparison_run(
+            model_name=model_name,
+            config=config.experiment,
+            model_params=model.get_params(),
+            metrics=metrics,
+        )
+
+        results.append(
             {
-                "Model": type(model_pipeline.named_steps["classifier"]).__name__,
-                "fit_time": round(scores["fit_time"].mean(), 4),
-                "Accuracy": round(scores["test_accuracy"].mean(), 4),
-                "Precision": round(scores["test_precision"].mean(), 4),
-                "Recall": round(scores["test_recall"].mean(), 4),
-                "F1": round(scores["test_f1"].mean(), 4),
-                "ROC AUC": round(scores["test_roc_auc"].mean(), 4),
+                "Model": model_name,
+                "fit_time": metrics["fit_time"],
+                "Accuracy": metrics["accuracy"],
+                "Precision": metrics["precision"],
+                "Recall": metrics["recall"],
+                "F1": metrics["f1"],
+                "ROC AUC": metrics["roc_auc"],
             }
         )
 
+        logger.info(
+            "Finished %s: F1 = %.4f ± %.4f",
+            model_name,
+            scores["test_f1"].mean(),
+            scores["test_f1"].std(),
+        )
+
     return (
-        pd.DataFrame(result).sort_values("F1", ascending=False).reset_index(drop=True)
+        pd.DataFrame(results)
+        .sort_values("F1", ascending=False)
+        .reset_index(drop=True)
+        .round(4)
     )
 
 

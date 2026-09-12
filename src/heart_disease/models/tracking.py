@@ -49,3 +49,19 @@ def log_model(model: Any, artifact_path: str = "model") -> None:
 def log_best_params(params: dict[str, Any]) -> None:
     """Log model hyperparameters."""
     mlflow.log_params(params)
+
+
+def log_model_comparison_run(
+    model_name: str,
+    config: ExperimentConfig,
+    model_params: dict[str, Any],
+    metrics: dict[str, float],
+) -> None:
+    """Log a model comparison experiment to MLflow."""
+    start_experiment()
+
+    with start_run(run_name=model_name):
+        log_experiment_config(config)
+        mlflow.log_param("model_name", model_name)
+        mlflow.log_params(model_params)
+        log_metrics(metrics)
