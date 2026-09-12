@@ -26,10 +26,12 @@ def log_experiment_config(config: ExperimentConfig) -> None:
             "test_size": config.test_size,
             "cv_folds": config.cv_folds,
             "single_scoring": config.single_scoring,
+            "multiple-scoring": config.multiple_scoring,
             "drop_threshold": config.drop_threshold,
             "use_scaler": config.use_scaler,
             "numeric_missing_indicator": config.numeric_missing_indicator,
             "categorical_missing_indicator": config.categorical_missing_indicator,
+            "logistic_regression_params": config.logistic_regression_params,
         }
     )
 
@@ -40,7 +42,7 @@ def log_metrics(metrics: dict[str, float]) -> None:
 
 
 def log_model(model: Any, artifact_path: str = "model") -> None:
-    """Log a cikit-learn model to MLflow."""
+    """Log a scikit-learn model to MLflow."""
     mlflow.sklearn.log_model(model, artifact_path=artifact_path)
 
 
