@@ -6,11 +6,14 @@ import mlflow.sklearn
 from heart_disease.config import ExperimentConfig
 
 
+
 def start_experiment(
     experiment_name: str = "uci-heart-disease",
+    mlflow_tracking_uri: str = "http://127.0.0.1:5000"
 ) -> None:
     """Set the MLflow experiment."""
     mlflow.set_experiment(experiment_name=experiment_name)
+    mlflow.set_tracking_uri(uri=mlflow_tracking_uri)
 
 
 def start_run(run_name: str | None = None):
@@ -31,7 +34,6 @@ def log_experiment_config(config: ExperimentConfig) -> None:
             "use_scaler": config.use_scaler,
             "numeric_missing_indicator": config.numeric_missing_indicator,
             "categorical_missing_indicator": config.categorical_missing_indicator,
-            "logistic_regression_params": config.logistic_regression_params,
         }
     )
 
