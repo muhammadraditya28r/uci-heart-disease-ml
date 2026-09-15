@@ -17,7 +17,7 @@ import joblib
 
 from heart_disease.utils.logging import get_logger
 from heart_disease.config import ExperimentConfig
-from heart_disease.models.tracking import log_model_comparison_run
+from heart_disease.models.tracking import log_model_comparison_run, log_grid_search_run
 
 
 logger = get_logger(__name__)
@@ -124,6 +124,14 @@ def grid_search(
     )
 
     search.fit(X, y)
+
+    log_grid_search_run(
+        model_name=model.__class__.__name__,
+        config=config.experiment,
+        param_grid=param_grid,
+        best_params=search.best_params_,
+        best_score=search.best_score_,
+    )
 
     logger.info(
         "Best parameters: %s | Best CV scores: %.3f",

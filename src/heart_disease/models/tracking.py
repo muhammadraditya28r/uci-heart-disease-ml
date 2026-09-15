@@ -78,3 +78,41 @@ def log_model_comparison_run(
         mlflow.log_param("model_name", model_name)
         mlflow.log_params(_flatten_params(model_params))
         log_metrics(metrics)
+
+
+def log_grid_search_run(
+        model_name: str,
+        config: ExperimentConfig,
+        param_grid: dict[str, Any],
+        best_params: dict[str, Any],
+        best_score: float,
+) -> None:
+    """Log a GridSearchCV experiment to MLflow."""
+    start_experiment()
+
+    with start_run(f"{model_name}-grid-search"):
+        log_experiment_config(config)
+        mlflow.log_param("model_name", model_name)
+        mlflow.log_param("search_type", "GridSearchCV")
+
+        if isinstance(param_grid, dict):
+            search_params = {
+                f"search_{key}": str(value)
+                for key, value in param_grid.items()
+            }
+        else:
+            search_params = {
+                f"search_{i}_{key}": str(value)
+                for i, grid in enumerate(param_grid)
+                for key, value in grid.items()
+            }
+        mlflow.log_params(search_params)
+
+        mlflow.log_params(
+            {
+                f"best_{key}": value 
+                for key, value in _flatten_params(best_params).items()
+            }
+        )
+
+        mlflow.log_metric("best_cv_score", best_score)
