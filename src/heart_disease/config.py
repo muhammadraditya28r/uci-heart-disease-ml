@@ -1,7 +1,6 @@
 from typing import Any
 
 from pathlib import Path
-from sklearn.model_selection import StratifiedKFold
 from dataclasses import dataclass, field
 
 
@@ -40,9 +39,6 @@ MLFLOW_EXPERIMENT_NAME = "uci-heart-disease"
 RANDOM_STATE = 42
 TEST_SIZE = 0.2
 CV_FOLDS = 5
-STRATIFIED_K_FOLDS = StratifiedKFold(
-    n_splits=CV_FOLDS, shuffle=True, random_state=RANDOM_STATE
-)
 SINGLE_SCORING = "f1"
 MULTIPLE_SCORING = [
     "accuracy",

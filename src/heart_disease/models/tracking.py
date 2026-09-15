@@ -11,12 +11,12 @@ from heart_disease.config import (
 
 
 def start_experiment(
-    experiment_name: str = MLFLOW_EXPERIMENT_NAME,
     mlflow_tracking_uri: str = MLFLOW_TRACKING_URI,
+    experiment_name: str = MLFLOW_EXPERIMENT_NAME,
 ) -> None:
     """Set the MLflow experiment."""
-    mlflow.set_experiment(experiment_name=experiment_name)
     mlflow.set_tracking_uri(uri=mlflow_tracking_uri)
+    mlflow.set_experiment(experiment_name=experiment_name)
 
 
 def start_run(run_name: str | None = None):
@@ -32,7 +32,7 @@ def log_experiment_config(config: ExperimentConfig) -> None:
             "test_size": config.test_size,
             "cv_folds": config.cv_folds,
             "single_scoring": config.single_scoring,
-            "multiple_scoring": config.multiple_scoring,
+            "multiple_scoring": ",".join(config.multiple_scoring),
             "drop_threshold": config.drop_threshold,
             "use_scaler": config.use_scaler,
             "numeric_missing_indicator": config.numeric_missing_indicator,
