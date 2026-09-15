@@ -35,6 +35,8 @@ FULL_COLUMNS = FEATURES + [TARGET_COLUMN]
 
 # -----------------------------------TRAINING CONFIGURATION-----------------------------------------#
 
+MLFLOW_TRACKING_URI = "http://127.0.0.1:5000"
+MLFLOW_EXPERIMENT_NAME = "uci-heart-disease"
 RANDOM_STATE = 42
 TEST_SIZE = 0.2
 CV_FOLDS = 5

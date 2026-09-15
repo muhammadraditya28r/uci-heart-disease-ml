@@ -3,13 +3,16 @@ from typing import Any
 import mlflow
 import mlflow.sklearn
 
-from heart_disease.config import ExperimentConfig
-
+from heart_disease.config import (
+    ExperimentConfig,
+    MLFLOW_TRACKING_URI,
+    MLFLOW_EXPERIMENT_NAME,
+)
 
 
 def start_experiment(
-    experiment_name: str = "uci-heart-disease",
-    mlflow_tracking_uri: str = "http://127.0.0.1:5000"
+    experiment_name: str = MLFLOW_EXPERIMENT_NAME,
+    mlflow_tracking_uri: str = MLFLOW_TRACKING_URI,
 ) -> None:
     """Set the MLflow experiment."""
     mlflow.set_experiment(experiment_name=experiment_name)
@@ -53,6 +56,14 @@ def log_best_params(params: dict[str, Any]) -> None:
     mlflow.log_params(params)
 
 
+def _flatten_params(params: dict[str, Any]) -> dict[str, Any]:
+    return {
+        key: value
+        for key, value in params.items()
+        if isinstance(value, (str, int, float, bool))
+    }
+
+
 def log_model_comparison_run(
     model_name: str,
     config: ExperimentConfig,
@@ -65,5 +76,5 @@ def log_model_comparison_run(
     with start_run(run_name=model_name):
         log_experiment_config(config)
         mlflow.log_param("model_name", model_name)
-        mlflow.log_params(model_params)
+        mlflow.log_params(_flatten_params(model_params))
         log_metrics(metrics)
