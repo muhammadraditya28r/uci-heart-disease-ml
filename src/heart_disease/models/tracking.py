@@ -46,9 +46,10 @@ def log_metrics(metrics: dict[str, float]) -> None:
     mlflow.log_metrics(metrics)
 
 
-def log_model(model: Any, artifact_path: str = "model") -> None:
+def log_model(model: Any, name: str = "model") -> None:
     """Log a scikit-learn model to MLflow."""
-    mlflow.sklearn.log_model(model, artifact_path=artifact_path)
+    start_experiment()
+    mlflow.sklearn.log_model(model, name=name, skops_trusted_types=["numpy.dtype"])
 
 
 def log_best_params(params: dict[str, Any]) -> None:

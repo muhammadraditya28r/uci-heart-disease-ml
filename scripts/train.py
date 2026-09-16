@@ -17,7 +17,7 @@ from heart_disease.features.preprocessing import (
     create_training_pipeline,
 )
 from heart_disease.models.train import save_model, train_model
-
+from heart_disease.models.tracking import log_model
 
 config = ExperimentConfig()
 
@@ -57,6 +57,7 @@ def main() -> None:
 
     save_model(model, MODEL_DIR / "01_final_lr_model.joblib")
 
+    log_model(model, name="production_model")
 
 if __name__ == "__main__":
     main()
