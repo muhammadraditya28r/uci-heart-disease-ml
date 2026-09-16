@@ -1,4 +1,5 @@
 from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
 
 from heart_disease.config import (
     RAW_DATA_DIR,
@@ -21,26 +22,40 @@ from heart_disease.models.train import save_model, train_model
 config = ExperimentConfig()
 
 
+def build_model(config: ExperimentConfig) -> Pipeline:
+    """Build the selected preprocessing + model pipeline"""
+
+    preprocessor = create_preprocessor(
+        create_numeric_pipeline(
+            use_scaler=config.use_scaler,
+            add_indicator=config.numeric_missing_indicator,
+        ),
+        create_categorical_pipeline(
+            add_indicator=config.categorical_missing_indicator,
+        ),
+    )
+
+    classifier = LogisticRegression(**config.logistic_regression_params)
+
+    return create_training_pipeline(
+        classifier,
+        preprocessor,
+    )
+
+
 def main() -> None:
+
     df = load_file(RAW_DATA_DIR / "heart_disease_uci.csv")
     df = clean_data(df, drop_thresh=config.drop_threshold)
 
     X = df[FEATURES]
     y = df[TARGET_COLUMN]
 
-    preprocessor = create_preprocessor(
-        create_numeric_pipeline(
-            use_scaler=config.use_scaler, add_indicator=config.numeric_missing_indicator
-        ),
-        create_categorical_pipeline(add_indicator=config.categorical_missing_indicator),
-    )
-    model = create_training_pipeline(
-        LogisticRegression(**config.logistic_regression_params), preprocessor
-    )
+    model = build_model(config=config)
 
     model = train_model(model, X, y)
 
-    save_model(model, MODEL_DIR / "final_model.joblib")
+    save_model(model, MODEL_DIR / "01_final_lr_model.joblib")
 
 
 if __name__ == "__main__":
