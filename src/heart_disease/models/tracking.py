@@ -81,24 +81,23 @@ def log_model_comparison_run(
 
 
 def log_grid_search_run(
-        model_name: str,
-        config: ExperimentConfig,
-        param_grid: dict[str, Any],
-        best_params: dict[str, Any],
-        best_score: float,
+    model_name: str,
+    config: ExperimentConfig,
+    param_grid: dict[str, Any],
+    best_params: dict[str, Any],
+    best_score: float,
 ) -> None:
     """Log a GridSearchCV experiment to MLflow."""
     start_experiment()
 
-    with start_run(f"{model_name}-grid-search"):
+    with start_run(run_name=f"{model_name}-grid-search"):
         log_experiment_config(config)
         mlflow.log_param("model_name", model_name)
         mlflow.log_param("search_type", "GridSearchCV")
 
         if isinstance(param_grid, dict):
             search_params = {
-                f"search_{key}": str(value)
-                for key, value in param_grid.items()
+                f"search_{key}": str(value) for key, value in param_grid.items()
             }
         else:
             search_params = {
@@ -110,9 +109,26 @@ def log_grid_search_run(
 
         mlflow.log_params(
             {
-                f"best_{key}": value 
+                f"best_{key}": value
                 for key, value in _flatten_params(best_params).items()
             }
         )
 
         mlflow.log_metric("best_cv_score", best_score)
+
+
+def log_final_evaluation_model(
+    model_name: str,
+    config: ExperimentConfig,
+    model_params: dict[str, Any],
+    metrics: dict[str, float],
+) -> None:
+    """Log final held-out test evaluation to MLflow."""
+    start_experiment()
+
+    with start_run(run_name=f"{model_name}-final-evaluation"):
+        log_experiment_config(config)
+        mlflow.log_param("model_name", model_name)
+        mlflow.log_param("evaluation_stage", "final_stage")
+        mlflow.log_params(_flatten_params(model_params))
+        log_metrics(metrics)

@@ -14,6 +14,7 @@ from sklearn.metrics import (
 )
 
 from heart_disease.utils.logging import get_logger
+from heart_disease.models.tracking import log_final_evaluation_model
 
 
 logger = get_logger(__name__)
@@ -23,6 +24,7 @@ def evaluate_model(
     model: Pipeline,
     X_test: pd.DataFrame,
     y_test: pd.Series,
+    config,
 ) -> dict[str, float]:
     """
     Evaluate a fitted classification model on the test set.
@@ -55,6 +57,13 @@ def evaluate_model(
         metrics["recall"],
         metrics["f1"],
         metrics.get("roc_auc", float("nan")),
+    )
+
+    log_final_evaluation_model(
+        model_name=type(model.named_steps["classifier"]).__name__,
+        config=config,
+        model_params=model.named_steps["classifier"].get_params(),
+        metrics=metrics,
     )
 
     return metrics
