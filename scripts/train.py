@@ -23,7 +23,6 @@ config = ExperimentConfig()
 
 def main() -> None:
     df = load_file(RAW_DATA_DIR / "heart_disease_uci.csv")
-    df = df.drop(columns=["dataset", "id"])
     df = clean_data(df, drop_thresh=config.drop_threshold)
 
     X = df[FEATURES]

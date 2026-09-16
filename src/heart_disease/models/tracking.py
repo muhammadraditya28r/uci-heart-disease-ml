@@ -117,7 +117,7 @@ def log_grid_search_run(
         mlflow.log_metric("best_cv_score", best_score)
 
 
-def log_final_evaluation_model(
+def log_final_evaluation_run(
     model_name: str,
     config: ExperimentConfig,
     model_params: dict[str, Any],
@@ -129,6 +129,6 @@ def log_final_evaluation_model(
     with start_run(run_name=f"{model_name}-final-evaluation"):
         log_experiment_config(config)
         mlflow.log_param("model_name", model_name)
-        mlflow.log_param("evaluation_stage", "final_stage")
+        mlflow.log_param("evaluation_stage", "final_test")
         mlflow.log_params(_flatten_params(model_params))
         log_metrics(metrics)

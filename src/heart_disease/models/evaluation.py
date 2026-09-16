@@ -14,7 +14,7 @@ from sklearn.metrics import (
 )
 
 from heart_disease.utils.logging import get_logger
-from heart_disease.models.tracking import log_final_evaluation_model
+from heart_disease.models.tracking import log_final_evaluation_run
 
 
 logger = get_logger(__name__)
@@ -42,7 +42,7 @@ def evaluate_model(
         "accuracy": accuracy_score(y_test, y_pred),
         "precision": precision_score(y_test, y_pred),
         "recall": recall_score(y_test, y_pred),
-        "f1": f1_score(y_pred, y_test),
+        "f1": f1_score(y_test, y_pred),
     }
 
     if hasattr(model, "predict_proba"):
@@ -59,7 +59,7 @@ def evaluate_model(
         metrics.get("roc_auc", float("nan")),
     )
 
-    log_final_evaluation_model(
+    log_final_evaluation_run(
         model_name=type(model.named_steps["classifier"]).__name__,
         config=config,
         model_params=model.named_steps["classifier"].get_params(),
