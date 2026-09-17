@@ -2,6 +2,7 @@ import pandas as pd
 from numpy import nan
 
 from heart_disease.models.train import load_model
+from heart_disease.models.interpretation import get_feature_coefficients
 from heart_disease.config import MODEL_DIR
 
 
@@ -34,3 +35,7 @@ sample = pd.DataFrame(
 prediction = model.predict(sample)
 
 print(prediction)
+
+coeff = get_feature_coefficients(model)
+
+print(coeff)
