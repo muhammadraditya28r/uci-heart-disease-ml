@@ -35,10 +35,12 @@ def get_prediction_errors(
     """Return test observation with predictions and error classification."""
 
     predictions = model.predict(X_test)
+    probabilities = model.predict_proba(X_test)[:, 1]
 
     result = X_test.copy()
     result["actual"] = y_test.to_numpy()
     result["predicted"] = predictions
+    result["probability"] = probabilities
 
     result["error_type"] = "correct"
     result.loc[
