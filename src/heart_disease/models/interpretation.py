@@ -22,6 +22,32 @@ def get_feature_coefficients(model: Pipeline) -> pd.DataFrame:
                 "odds_ratio": [math.exp(coef) for coef in coefficients],
             }
         )
-        .sort_values("coefficient")
+        .sort_values("coefficient", ascending=False)
         .reset_index(drop=True)
     )
+
+
+def get_prediction_errors(
+    model: Pipeline,
+    X_test: pd.DataFrame,
+    y_test: pd.Series,
+) -> pd.DataFrame:
+    """Return test observation with predictions and error classification."""
+
+    predictions = model.predict(X_test)
+
+    result = X_test.copy()
+    result["actual"] = y_test.to_numpy()
+    result["predicted"] = predictions
+
+    result["error_type"] = "correct"
+    result.loc[
+        (result["actual"] == 0) & (result["predicted"] == 1),
+        "error_type",
+    ] = "false_positive"
+    result.loc[
+        (result["actual"] == 1) & (result["predicted"] == 0),
+        "error_type",
+    ] = "false_negative"
+
+    return result
