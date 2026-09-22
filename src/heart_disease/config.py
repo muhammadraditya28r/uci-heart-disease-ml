@@ -82,3 +82,7 @@ class ExperimentConfig:
     logistic_regression_params: dict[str, Any] = field(
         default_factory=lambda: LOGISTIC_REGRESSION_PARAMS.copy()
     )
+
+# ---------------------------------------PRODUCTION MODEL-----------------------------------------------#
+
+PRODUCTION_MODEL = "01_final_lr_model.joblib"

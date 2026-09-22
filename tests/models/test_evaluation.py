@@ -3,6 +3,7 @@ import pytest
 
 from sklearn.linear_model import LogisticRegression
 
+from heart_disease.config import ExperimentConfig
 from heart_disease.features.preprocessing import create_training_pipeline
 from heart_disease.models.evaluation import (
     evaluate_model,
@@ -26,7 +27,7 @@ def fitted_model(
 def test_evaluate_model(fitted_model) -> None:
     model, X, y = fitted_model
 
-    metrics = evaluate_model(model, X, y)
+    metrics = evaluate_model(model, X, y, ExperimentConfig())
 
     assert "accuracy" in metrics
     assert "precision" in metrics
@@ -38,7 +39,7 @@ def test_evaluate_model(fitted_model) -> None:
 def test_evaluation_metrics_are_valid(fitted_model) -> None:
     model, X, y = fitted_model
 
-    metrics = evaluate_model(model, X, y)
+    metrics = evaluate_model(model, X, y, ExperimentConfig())
 
     for value in metrics.values():
         assert 0 <= value <= 1
