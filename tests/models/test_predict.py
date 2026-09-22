@@ -1,14 +1,11 @@
-import pandas as pd
 
-from heart_disease.config import MODEL_DIR, PRODUCTION_MODEL
+from heart_disease.config import PRODUCTION_MODEL_DIR
 from heart_disease.models.train import load_model
 from heart_disease.models.predict import predict
 
 
 def test_production_model_prediction() -> None:
-    model = load_model(
-        MODEL_DIR / PRODUCTION_MODEL
-    )
+    model = load_model(PRODUCTION_MODEL_DIR)
 
     features = {
         "age": 63,
@@ -23,7 +20,7 @@ def test_production_model_prediction() -> None:
         "exang": 0,
         "slope": "downsloping",
         "ca": 0,
-        "thal": "fixed defect",        
+        "thal": "fixed defect",
     }
 
     prediction, probability = predict(model, features)

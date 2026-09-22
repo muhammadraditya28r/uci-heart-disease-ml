@@ -13,9 +13,9 @@ RAW_DATA_DIR = DATA_DIR / "raw"
 INTERIM_DATA_DIR = DATA_DIR / "interim"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 
-MODEL_DIR = PROJECT_ROOT / "models"
 REPORT_DIR = PROJECT_ROOT / "report"
-
+MODEL_DIR = PROJECT_ROOT / "models"
+PRODUCTION_MODEL_DIR = MODEL_DIR / "01_final_lr_model.joblib"
 
 # -----------------------------------------DATA COLUMNS-----------------------------------------------#
 
@@ -82,7 +82,3 @@ class ExperimentConfig:
     logistic_regression_params: dict[str, Any] = field(
         default_factory=lambda: LOGISTIC_REGRESSION_PARAMS.copy()
     )
-
-# ---------------------------------------PRODUCTION MODEL-----------------------------------------------#
-
-PRODUCTION_MODEL = "01_final_lr_model.joblib"
