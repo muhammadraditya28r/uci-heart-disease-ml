@@ -9,9 +9,6 @@ from heart_disease.config import MODEL_DIR
 model = load_model(path=MODEL_DIR / "01_final_lr_model.joblib")
 
 
-print(model)
-
-
 sample = pd.DataFrame(
     [
         {
@@ -20,7 +17,7 @@ sample = pd.DataFrame(
             "chol": 233,
             "thalch": 150,
             "oldpeak": 2.3,
-            "sex": 1,
+            "sex": "Female",
             "cp": "typical angina",
             "fbs": nan,
             "restecg": "lv hypertrophy",
@@ -36,6 +33,6 @@ prediction = model.predict(sample)
 
 print(prediction)
 
-coeff = get_feature_coefficients(model)
+probability = model.predict_proba(sample)
 
-print(coeff)
+print(probability)
