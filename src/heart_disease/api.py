@@ -9,7 +9,7 @@ from heart_disease.models.train import load_model
 app = FastAPI(
     title="Heart Disease Prediction API",
     version="0.1.0",
-    description="API fro predicting heart disease from clinical feature.",
+    description="API for predicting heart disease from clinical feature.",
 )
 
 

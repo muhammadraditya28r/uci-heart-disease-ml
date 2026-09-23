@@ -3,7 +3,6 @@ from fastapi.testclient import TestClient
 from heart_disease.api import app
 
 
-
 client = TestClient(app)
 
 
@@ -39,7 +38,7 @@ def test_prediction_endpoint() -> None:
     data = response.json()
 
     assert data["prediction"] in {0, 1}
-    assert 0.0 <= data["prediction"] <= 1.0
+    assert 0.0 <= data["probability"] <= 1.0
 
 
 def test_prediction_endpoint_rejects_invalid_requests() -> None:
