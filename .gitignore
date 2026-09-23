@@ -42,6 +42,7 @@ data/processed/*
 # Model artifacts
 models/*
 !models/.gitkeep
+!models/01_final_lr_model.joblib
 
 # Reports
 reports/figures/*
