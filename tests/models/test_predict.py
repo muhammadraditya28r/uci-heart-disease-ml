@@ -1,4 +1,3 @@
-
 from heart_disease.config import PRODUCTION_MODEL_DIR
 from heart_disease.models.train import load_model
 from heart_disease.models.predict import predict
