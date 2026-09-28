@@ -2,22 +2,21 @@
 .venv/
 
 # Python cache
-__pychache__/
+__pycache__/
 *.py[cod]
-*.pyc
 
 # Jupyter
 .ipynb_checkpoints/
 
 # Environtment variables
-.env 
+.env
 
 # IDE
 .vscode/
 .idea/
 
 # OS
-.DS_store
+.DS_Store
 
 # ML artifacts
 *.pkl

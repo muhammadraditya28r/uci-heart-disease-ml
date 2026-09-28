@@ -1,28 +1,28 @@
 import pandas as pd
 import pytest
 
-
-@pytest.fixture
-def sample_features() -> pd.DataFrame:
-    return pd.DataFrame(
-        {
-            "age": [40, 45, 60, 65, 70, 75],
-            "trestbps": [120, 125, 130, 135, 140, 145],
-            "chol": [180, 200, 220, 240, 260, 280],
-            "thalch": [170, 165, 155, 150, 140, 130],
-            "oldpeak": [0.0, 0.5, 1.0, 1.5, 2.0, 2.5],
-            "sex": [0, 1, 0, 1, 1, 0],
-            "cp": [1, 2, 1, 3, 2, 3],
-            "fbs": [0, 0, 1, 0, 1, 0],
-            "restecg": [0, 1, 0, 1, 0, 1],
-            "exang": [0, 0, 1, 1, 1, 1],
-            "slope": [1, 2, 1, 2, 2, 3],
-            "ca": [0, 0, 1, 1, 2, 2],
-            "thal": [3, 3, 6, 6, 7, 7],
-        }
-    )
+from heart_disease.config import FEATURES, TARGET_COLUMN, RAW_DATA_DIR
+from heart_disease.data.ingestion import load_file
+from heart_disease.features.cleaning import clean_data
 
 
 @pytest.fixture
-def sample_target() -> pd.Series:
-    return pd.Series([0, 0, 0, 1, 1, 1])
+def sample_data() -> pd.DataFrame:
+    df = load_file(path=RAW_DATA_DIR / "heart_disease_uci.csv")
+    df = clean_data(df)
+
+    normal = df[df[TARGET_COLUMN] == 0].sample(5, random_state=42)
+    positive = df[df[TARGET_COLUMN] > 0].sample(5, random_state=42)
+    missing = df[df[FEATURES].isna().any(axis=1)].sample(5, random_state=42)
+
+    return pd.concat([normal, positive, missing]).drop_duplicates()
+
+
+@pytest.fixture
+def sample_features(sample_data: pd.DataFrame) -> pd.DataFrame:
+    return sample_data[FEATURES]
+
+
+@pytest.fixture
+def sample_target(sample_data: pd.DataFrame) -> pd.Series:
+    return sample_data[TARGET_COLUMN]

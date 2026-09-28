@@ -1,5 +1,4 @@
 import pandas as pd
-from numpy import nan
 
 from heart_disease.models.train import load_model
 from heart_disease.config import MODEL_DIR
@@ -18,7 +17,7 @@ sample = pd.DataFrame(
             "oldpeak": 2.3,
             "sex": "Female",
             "cp": "typical angina",
-            "fbs": nan,
+            "fbs": None,
             "restecg": "lv hypertrophy",
             "exang": 0,
             "slope": "downsloping",

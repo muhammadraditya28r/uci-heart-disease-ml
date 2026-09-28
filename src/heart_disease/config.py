@@ -13,7 +13,7 @@ RAW_DATA_DIR = DATA_DIR / "raw"
 INTERIM_DATA_DIR = DATA_DIR / "interim"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 
-REPORT_DIR = PROJECT_ROOT / "report"
+REPORT_DIR = PROJECT_ROOT / "reports"
 MODEL_DIR = PROJECT_ROOT / "models"
 PRODUCTION_MODEL_DIR = MODEL_DIR / "01_final_lr_model.joblib"
 
