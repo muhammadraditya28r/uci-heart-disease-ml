@@ -10,6 +10,11 @@ RUN pip install --no-cache-dir uv \
 COPY src ./src
 COPY models ./models
 
+RUN useradd --create-home --shell /bin/bash appuser \
+    && chown -R appuser:appuser /app
+
+USER appuser
+
 ENV PYTHONPATH=/app/src
 
 EXPOSE 8000

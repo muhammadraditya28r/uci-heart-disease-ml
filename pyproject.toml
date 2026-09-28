@@ -15,6 +15,7 @@ dependencies = [
     "pandera>=0.32.1",
     "scikit-learn>=1.9.0",
     "uvicorn>=0.51.0",
+    "mlflow>=3.14.0",
 ]
 
 [dependency-groups]
@@ -27,7 +28,6 @@ dev = [
     "seaborn>=0.13.2",
     "matplotlib>=3.11.1",
     "xgboost>=3.3.0",
-    "mlflow>=3.14.0",
     "scipy>=1.18.0",
 ]
 
