@@ -64,9 +64,12 @@ jobs:
       - name: Wait for API
         run: |
           for i in {1..30}; do
-            if curl --fail http://localhost:8000/docs > /dev/null; then exit 0
-            fi sleep 2 
+            if curl --fail http://localhost:8000/docs > /dev/null; then 
+              exit 0
+            fi 
+              sleep 2 
           done
+          
           docker logs heart-disease-api
           exit 1
 
