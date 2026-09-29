@@ -25,6 +25,7 @@ def evaluate_model(
     X_test: pd.DataFrame,
     y_test: pd.Series,
     config,
+    mlflow_log: bool = False,
 ) -> dict[str, float]:
     """
     Evaluate a fitted classification model on the test set.
@@ -59,12 +60,13 @@ def evaluate_model(
         metrics.get("roc_auc", float("nan")),
     )
 
-    log_final_evaluation_run(
-        model_name=type(model.named_steps["classifier"]).__name__,
-        config=config,
-        model_params=model.named_steps["classifier"].get_params(),
-        metrics=metrics,
-    )
+    if mlflow_log:
+        log_final_evaluation_run(
+            model_name=type(model.named_steps["classifier"]).__name__,
+            config=config,
+            model_params=model.named_steps["classifier"].get_params(),
+            metrics=metrics,
+        )
 
     return metrics
 

@@ -71,6 +71,7 @@ def wait_for_health(container_id: str) -> None:
         f"Application did not become ready within {STARTUP_TIMEOUT} seconds."
     )
 
+
 def test_prediction() -> None:
     payload = json.dumps(VALID_PAYLOAD).encode("utf-8")
 
