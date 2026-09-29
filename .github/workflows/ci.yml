@@ -67,9 +67,9 @@ jobs:
             if curl --fail http://localhost:8000/docs > /dev/null; then 
               exit 0
             fi 
-              sleep 2 
+            sleep 2 
           done
-          
+
           docker logs heart-disease-api
           exit 1
 
