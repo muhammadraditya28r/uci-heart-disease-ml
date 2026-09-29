@@ -58,7 +58,7 @@ jobs:
         run: |
           docker run -d \
             --name heart-disease-api \
-            -p 8000:8000 \ 
+            -p 8000:8000 \
             heart-disease-api
 
       - name: Wait for API
