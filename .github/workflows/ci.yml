@@ -60,4 +60,4 @@ jobs:
           python-version: "3.12"
 
       - name: Run container smoke test
-        run: python scripts/smoke_test.pytest
+        run: python scripts/smoke_test.py
