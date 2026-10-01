@@ -54,28 +54,10 @@ jobs:
       - name: Build Docker image
         run: docker build -t heart-disease-api .
 
-      - name: Run Docker container
-        run: |
-          docker run -d \
-            --name heart-disease-api \
-            -p 8000:8000 \
-            heart-disease-api
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-      - name: Wait for API
-        run: |
-          for i in {1..30}; do
-            if curl --fail http://localhost:8000/docs > /dev/null; then 
-              exit 0
-            fi 
-            sleep 2 
-          done
-
-          docker logs heart-disease-api
-          exit 1
-
-      - name: Run API smoke test
-        run: python scripts/smoke_test.py
-
-      - name: Stop container
-        if: always()
-        run: docker rm -f heart-disease-api
+      - name: Run container smoke test
+        run: python scripts/smoke_test.pytest
