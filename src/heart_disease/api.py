@@ -1,9 +1,16 @@
-from fastapi import FastAPI
+import time
+
+from fastapi import FastAPI, Request
+from starlette.responses import Response
 from pydantic import BaseModel
 
+from heart_disease.utils.logging import get_logger
 from heart_disease.config import PRODUCTION_MODEL_DIR
 from heart_disease.models.predict import predict
 from heart_disease.models.train import load_model
+
+
+logger = get_logger(__name__)
 
 
 app = FastAPI(
@@ -47,3 +54,37 @@ def predict_heart_disease(request: PredictionRequest) -> PredictionResponse:
     prediction, probability = predict(model, request.model_dump())
 
     return PredictionResponse(prediction=prediction, probability=probability)
+
+
+@app.middleware("http")
+async def log_request(request: Request, call_next) -> Response:
+    start = time.perf_counter()
+
+    try:
+        response = await call_next(request)
+
+        duration_ms = (time.perf_counter() - start) * 1000
+
+        logger.info(
+            "request completed | method=%s | path=%s | status=%s | duration_ms=%.2f",
+            request.method,
+            request.url.path,
+            response.status_code,
+            duration_ms,
+        )
+
+        return response
+
+    except Exception:
+        duration_ms = (time.perf_counter() - start) * 1000
+
+        logger.exception(
+            "request failed | method=%s | path=%s | duration_ms=%.2f",
+            request.method,
+            request.url.path,
+            duration_ms
+        )
+
+        raise
+
+
